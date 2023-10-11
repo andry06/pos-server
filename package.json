@@ -1,9 +1,9 @@
 {
-  "name": "eduwork-server",
+  "name": "pos-server",
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "set debug=eduwork-server:* && nodemon ./bin/www"
+    "start": "set debug=pos-server:* && nodemon ./bin/www"
   },
   "dependencies": {
     "@casl/ability": "^6.5.0",
