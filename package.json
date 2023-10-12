@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "set debug=pos-server:* && nodemon ./bin/www"
+    "start": "node ./bin/www",
+    "dev": "set debug=eduwork-server:* && nodemon ./bin/www"
   },
   "dependencies": {
     "@casl/ability": "^6.5.0",
