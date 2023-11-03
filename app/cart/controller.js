@@ -48,11 +48,21 @@ const update = async (req, res, next) => {
 }
 
 const index = async (req, res, next) => {
+    const { products } = req.query;
     try {
-        let items = await CartItem
-            .find({user: req.user._id})
+        let items = {};
+        if(products){
+            const productsArray = products.split(',');
+            items = await CartItem
+            .find({user: req.user._id, product: {$in : productsArray}})
             .populate('product');
-        
+        }else{
+            items = await CartItem
+                .find({user: req.user._id})
+                // .find({user: req.user._id, product: {$in : ["650bb19049a5f7ccfb24b35d", "650bb26949a5f7ccfb24b372"]}})
+                .populate('product');
+        }
+      
         return res.json(items);
     }catch(err){
         if(err && err.name === 'ValidationError'){
@@ -65,6 +75,7 @@ const index = async (req, res, next) => {
         next(err);
     }
 }
+
 
 const destroy = async (req, res, next) => {
     try {

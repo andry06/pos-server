@@ -6,8 +6,10 @@ const OrderItem = require('../order-item/model');
 
 const store = async (req, res, next) => {
     try{
-        let { delivery_fee, delivery_address } = req.body;
-        let items = await CartItem.find({user: req.user._id}).populate('product');
+  
+        let { delivery_fee, delivery_address, idProduct } = req.body;
+        
+        let items = await CartItem.find({user: req.user._id, product: {$in : idProduct}}).populate('product');
         if(!items){
             return res.json({
                 error: 1,
@@ -28,7 +30,6 @@ const store = async (req, res, next) => {
             delivery_fee: delivery_fee,
             user: req.user._id
         });
-        console.log(order)
         let orderItems = await OrderItem
             .insertMany(items.map(item=> ({
             ...item,
@@ -40,7 +41,7 @@ const store = async (req, res, next) => {
             })));
         orderItems.forEach(item => order.order_items.push(item));
         order.save();
-        await CartItem.deleteMany({user: req.user._id});
+        await CartItem.deleteMany({user: req.user._id, product: {$in : idProduct}});
         return res.json(order);
     }catch(err){
         if(err && err.name === 'ValidationError'){
